@@ -1,84 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Google Sheet Data</title>
-
-<style>
-
-body{
-    font-family:Arial;
-    margin:30px;
-}
-
-table{
-    border-collapse:collapse;
-    width:100%;
-}
-
-th,td{
-    border:1px solid #ddd;
-    padding:8px;
-}
-
-th{
-    background:#2196F3;
-    color:white;
-}
-
-</style>
-
+<title>Google Sheet Viewer</title>
 </head>
-
 <body>
 
 <h2>ข้อมูลจาก Google Sheet</h2>
 
-<table id="table">
-<thead></thead>
-<tbody></tbody>
-</table>
+<table border="1" id="table"></table>
 
 <script>
-
-const url="https://script.google.com/macros/s/xxxxxxxxxxxxxxxx/exec";
+const url = "https://docs.google.com/spreadsheets/d/e/XXXXXXXXXXXXXXXX/pub?output=csv";
 
 fetch(url)
-.then(res=>res.json())
-.then(data=>{
+.then(r => r.text())
+.then(csv => {
 
-    if(data.length==0) return;
+    const rows = csv.trim().split("\n");
 
-    let headers=Object.keys(data[0]);
+    let html = "";
 
-    let thead="<tr>";
+    rows.forEach((row,i)=>{
 
-    headers.forEach(h=>{
-        thead+=`<th>${h}</th>`;
-    });
+        const cols = row.split(",");
 
-    thead+="</tr>";
+        html += "<tr>";
 
-    document.querySelector("#table thead").innerHTML=thead;
-
-    let tbody="";
-
-    data.forEach(r=>{
-
-        tbody+="<tr>";
-
-        headers.forEach(h=>{
-            tbody+=`<td>${r[h]}</td>`;
+        cols.forEach(col=>{
+            html += i==0
+                ? `<th>${col}</th>`
+                : `<td>${col}</td>`;
         });
 
-        tbody+="</tr>";
+        html += "</tr>";
 
     });
 
-    document.querySelector("#table tbody").innerHTML=tbody;
+    document.getElementById("table").innerHTML = html;
 
 });
-
 </script>
 
 </body>
