@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Google Sheet Data</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    margin:30px;
+}
+
+table{
+    border-collapse:collapse;
+    width:100%;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+}
+
+th{
+    background:#2196F3;
+    color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>ข้อมูลจาก Google Sheet</h2>
+
+<table id="table">
+<thead></thead>
+<tbody></tbody>
+</table>
+
+<script>
+
+const url="https://script.google.com/macros/s/xxxxxxxxxxxxxxxx/exec";
+
+fetch(url)
+.then(res=>res.json())
+.then(data=>{
+
+    if(data.length==0) return;
+
+    let headers=Object.keys(data[0]);
+
+    let thead="<tr>";
+
+    headers.forEach(h=>{
+        thead+=`<th>${h}</th>`;
+    });
+
+    thead+="</tr>";
+
+    document.querySelector("#table thead").innerHTML=thead;
+
+    let tbody="";
+
+    data.forEach(r=>{
+
+        tbody+="<tr>";
+
+        headers.forEach(h=>{
+            tbody+=`<td>${r[h]}</td>`;
+        });
+
+        tbody+="</tr>";
+
+    });
+
+    document.querySelector("#table tbody").innerHTML=tbody;
+
+});
+
+</script>
+
+</body>
+</html>
